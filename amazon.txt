@@ -1,0 +1,24 @@
+animal(anteater). animal(armadillo). animal(boar). animal(caiman).
+animal(capybara). animal(eagle). animal(fish). animal(frog). animal(jaguar).
+animal(monkey). animal(sloth).
+
+plant(fruit). plant(grass). plant(leaf). plant(tuber).
+
+eats(ant,leaf). eats(anteater,ant). eats(armadillo,grub).
+eats(boar,tuber). eats(boar,leaf). eats(boar,fruit). eats(boar,grub).
+eats(boar,fish). eats(boar,frog).
+eats(caiman,fish). eats(caiman,frog).
+eats(capybara,grass). eats(capybara,fruit).
+eats(eagle,monkey). eats(eagle,sloth).
+eats(frog,ant).
+eats(jaguar,anteater). eats(jaguar,armadillo). eats(jaguar,boar).
+eats(jaguar,caiman). eats(jaguar,capybara).
+eats(monkey,frog). eats(monkey,fruit). eats(monkey,grub). eats(monkey,leaf).
+eats(sloth,leaf).
+
+predator(X) :- eats(X,Y) , animal(Y).
+prey(X) :- eats(Z,X) , animal(Z).
+apexpredator(X):- predator(X), \+ prey(X),!.
+herbivore(X):- eats(X,Y), plant(Y), \+ predator(X).
+webabove(X,Y) :- eats(X,Y),!.
+webabove(X,Y) :- eats(X,Z), webabove(Z,Y),!.

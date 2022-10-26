@@ -1,0 +1,20 @@
+noDuplicates([],[]).
+noDuplicates([H|T],L2):- member(H,T),noDuplicates(T,L2),!.
+noDuplicates([H|T1],[H|T2]):- \+ member(H,T1),noDuplicates(T1,T2).
+
+justBefore(X,Y,[X,Y|_]).
+justBefore(X,Y,[_|T]):- justBefore(X,Y,T),!.
+
+less_than_3([]).
+less_than_3([_|[]]).
+less_than_3([_,_|[]]).
+
+intersect([H|_],L2):- member(H,L2).
+intersect([H|T],L2):- \+ member(H,L2),intersect(T,L2),!.
+
+
+
+
+
+
+

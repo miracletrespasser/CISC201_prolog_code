@@ -1,0 +1,49 @@
+%
+%Part1 answers
+% 1.The state is represented by state(Goose,Grain,Fox,Boat) showing the location
+%  of goose, grain, fox and boat. each digit shows the position as 0 for west and 1 for east
+%   For example, state(1,1,1,1) means everything is on the east side including the boat
+% 2. the action is transfer(state1,object,state2), the object can be goose ,grain, fox or boat
+%    it means to transfer an object to the other side of river, if the object is boat, it means carry nothing
+% 3. initial state is state(0,0,0,0)
+% 4. goal state is state(1,1,1,1)
+% the final output of the Plan would be the object to be transfered everytime, for example
+% the output [goose,boat,fox,goose] means that the farmer brings the goose to east, take an empty boat back, 
+% take the fox to east and take the goose back.
+
+%Part2 code
+% Transfer a certain object if the boat is on the same side as it is 
+%tranfer goose
+transfer(state(0,Grain,Fox,0),goose,state(1,Grain,Fox,1)).
+transfer(state(1,Grain,Fox,1),goose,state(0,Grain,Fox,0)).
+%transfer grain
+transfer(state(Goose,0,Fox,0),grain,state(Goose,1,Fox,1)).
+transfer(state(Goose,1,Fox,1),grain,state(Goose,0,Fox,0)).
+%tranfer fox
+transfer(state(Goose,Grain,0,0),fox,state(Goose,Grain,1,1)).
+transfer(state(Goose,Grain,1,1),fox,state(Goose,Grain,0,0)).
+%transfer with empty boat
+transfer(state(Goose,Grain,Fox,0),boat,state(Goose,Grain,Fox,1)).
+transfer(state(Goose,Grain,Fox,1),boat,state(Goose,Grain,Fox,0)).
+
+%list the invalid states
+%goose &grain with out farmer on its side
+invalidstate(state(0,0,_,1)).
+invalidstate(state(1,1,_,0)).
+%fox&goose with out farmer on its side
+invalidstate(state(0,_,0,1)).
+invalidstate(state(1,_,1,0)).
+% plan(StartState,GoalState,Plan) is true if Plan is a list of objects that will be delivered and
+% lead from StartState to GoalState.
+plan(State,State,[]).
+plan(State1,GoalState,[Object1|RestOfObject]) :-
+    transfer(State1, Object1, State2),
+	\+ invalidstate(State2),
+    plan(State2, GoalState, RestOfObject).
+
+%bfirst_plan does a breadth-first search for plans meeting Robot World's
+%standard initial state and goal state, investigating the shortest paths first.
+
+bfirst_plan(Plan) :-
+    append(Plan,_,_),
+    plan(state(0,0,0,0), state(1,1,1,1), Plan).
